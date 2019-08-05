@@ -21,4 +21,6 @@ object CovarianceTest extends App {
   printAnimalNames(dogs)
   // Fido
   // Rex
+  val l = "s1"::"s2"::List("s2.1"::"s2.2"::Nil)::Nil
+  println(l.length)
 }

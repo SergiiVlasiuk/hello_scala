@@ -10,7 +10,8 @@ class StandardLibrarySpec extends FlatSpec with Matchers {
       xs match {
         case List() => x :: Nil
         case y :: ys =>
-          if (cond(x, y)) x :: y :: ys
+//          if (cond(x, y)) x :: y :: ys
+          if (cond(x, y)) x :: xs
           else y :: insert(x, ys)
       }
 
