@@ -84,16 +84,6 @@ class HelloSpec extends FlatSpec with Matchers {
       }
     fractionOfWhole(Half) shouldBe 0.5
   }
-  "sum(x => x, 1, 10)" should "be 55" in {
-    def sum(f: Int => Int, a: Int, b: Int): Int = {
-      def loop(x: Int, acc: Int): Int = {
-        if (x > b) acc
-        else loop(x + 1, acc + f(x))
-      }
-      loop(a, 0)
-    }
-    sum(x => x, 1, 10) shouldBe 55
-  }
   "Some(\"I am wrapped in something\")" should "be Some(\"I am wrapped in something\")" in {
     val someValue: Option[String] = Some("I am wrapped in something")
     someValue shouldBe Some("I am wrapped in something")
