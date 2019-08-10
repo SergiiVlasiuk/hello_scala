@@ -63,8 +63,8 @@ class FunctionalDataStructures extends FlatSpec with Matchers {
     def init[A](l: List[A]): List[A] =
       l match {
         case Nil => sys.error("init of empty list")
-        case h :: t => h :: init(t)
         case _ :: Nil => Nil
+        case h :: t => h :: init(t)
       }
 
     init(List(1, 2, 3)) shouldBe List(1, 2)
