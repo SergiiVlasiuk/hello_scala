@@ -63,8 +63,8 @@ class FunctionalDataStructures extends FlatSpec with Matchers {
     def init[A](l: List[A]): List[A] =
       l match {
         case Nil => sys.error("init of empty list")
-        case _ :: Nil => Nil
         case h :: t => h :: init(t)
+        case _ :: Nil => Nil
       }
 
     init(List(1, 2, 3)) shouldBe List(1, 2)
@@ -88,5 +88,35 @@ class FunctionalDataStructures extends FlatSpec with Matchers {
 
     length(l) shouldBe 5
   }
+  "write functions sum, product and length of a list using foldLeft" should "be ..." in {
+    def sum3(l: List[Int]) = l.foldLeft(0)(_ + _)
+
+    def product3(l: List[Double]) = l.foldLeft(1.0)(_ * _)
+
+    def length2[A](l: List[A]): Int = l.foldLeft(0)((acc, h) => acc + 1)
+
+    def listInts = List(1, 2, 3, 4, 5)
+
+    def listDoubles = List(1.0, 2.0, 3.0)
+
+    sum3(listInts) shouldBe 15
+    product3(listDoubles) shouldBe 6.0
+    length2(listInts) shouldBe 5
+  }
+  "Take a look at its implementation and check how it works" should "be ..." in {
+    List(1, 2, 3) ::: List(1, 2) shouldBe List(1, 2, 3, 1, 2)
+    List(1, 2, 3) ::: Nil shouldBe List(1, 2, 3)
+    Nil ::: List(1, 2) shouldBe List(1, 2)
+    Nil ::: Nil shouldBe Nil
+  }
+//  "function size to count the number of nodes (leaves and branches) in a tree" should "be ..." in {
+//    def size[A](t: Tree[A]): Int = t match {
+//      case Leaf(_) =>
+//      case Branch(l, r) =>  + size(l) + size(r)
+//    }
+//
+//    def t = Branch(Branch(Leaf(1), Leaf(2)), Leaf(3))
+//    size(t) shouldBe 5
+//  }
 }
 
