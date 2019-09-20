@@ -1,3 +1,5 @@
+import reactivemongo.api.collections.bson.BSONCollection
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Try
@@ -6,7 +8,7 @@ import reactivemongo.bson.{BSONDocumentReader, BSONDocumentWriter, Macros, docum
 
 object GetStartedWithMongo {
   def main(args: Array[String]): Unit = {
-    val age = 99
+    val age = 95
     val person: Person = Person("firstName", "lastName", age)
     createPerson(person)
     findPersonByAge(age).andThen {
@@ -29,7 +31,7 @@ object GetStartedWithMongo {
   val db: Future[DefaultDB] = futureConnection.flatMap(_.database(database))
 
   //  def personCollection: Future[List[Person]] = db.map(_.collection("person"))
-  def personCollection = db.map(_.collection("person"))
+  def personCollection: Future[BSONCollection] = db.map(_.collection("person"))
 
   // use personWriter
   def createPerson(person: Person): Future[Unit] =

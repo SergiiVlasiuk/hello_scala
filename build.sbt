@@ -6,6 +6,7 @@ ThisBuild / organization     := "com.example"
 ThisBuild / organizationName := "example"
 
 val reactiveMongo = "org.reactivemongo" %% "reactivemongo" % "0.18.6"
+val slf4jApi = "org.slf4j" % "slf4j-api" % "1.7.28"
 
 lazy val root = (project in file("."))
   .settings(
@@ -20,7 +21,7 @@ lazy val `introduction` = (project in file("introduction"))
   })
 lazy val `reactivemongo-getstarted` = (project in file("reactivemongo-getstarted"))
   .settings(libraryDependencies ++= {
-    Seq(reactiveMongo)
+    Seq(reactiveMongo, slf4jApi)
   })
 
 
