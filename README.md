@@ -1,5 +1,5 @@
 # scala learning
 
-## [scala instroduction](introduction/README.md)
+## [scala instroduction](introduction)
 
-## [reactivemongo getstarted](reactivemongo-getstarted/README.md)
+## [reactivemongo getstarted](reactivemongo-getstarted)
