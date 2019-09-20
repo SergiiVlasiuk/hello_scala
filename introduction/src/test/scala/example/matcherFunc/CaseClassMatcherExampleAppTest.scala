@@ -8,7 +8,7 @@ class CaseClassMatcherExampleAppTest extends FlatSpec with Matchers {
   "first" should "match specified name" in {
     matcherFunc(User("dave", "some@email.com")) shouldBe "first case: This is dave, his email: some@email.com"
   }
-  "first" should "match by name and email" in {
+  it should "match by name and email" in {
     matcherFunc(User("dave", "anymail")) shouldBe "first case: This is dave, his email: anymail"
   }
   "second" should "match by name and email" in {
@@ -22,5 +22,11 @@ class CaseClassMatcherExampleAppTest extends FlatSpec with Matchers {
   }
   "fifth" should "match by name and email" in {
     matcherFunc(SomethingStrange) shouldBe "fifth case: We don’t know what is it: SomethingStrange"
+  }
+  "case class more testing" should "filter with case class" in {
+    case class PhoneExt(name: String, ext: Int)
+    val extensions = List(PhoneExt("steve", 100), PhoneExt("robey", 200))
+
+    extensions.filter { case PhoneExt(name, extension) => extension < 200 } shouldBe List(PhoneExt("steve",100))
   }
 }
