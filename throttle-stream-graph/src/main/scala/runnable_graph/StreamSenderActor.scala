@@ -41,15 +41,14 @@ class StreamSenderActor(target: ActorRef) extends Actor with ActorLogging {
         )
         .map(bs => bs.utf8String)
 
-      val throttledLines: Flow[ByteString, StreamLine, NotUsed] = lines.throttle(1, Duration(2, "seconds"), 1, ThrottleMode.shaping)
+      val throttledLinesSink: Sink[ByteString, NotUsed] = lines.throttle(1, Duration(2, "seconds"), 1, ThrottleMode.shaping)
         .to(sink)
 
       RunnableGraph
         .fromGraph(GraphDSL.create() {
           implicit builder: GraphDSL.Builder[NotUsed] =>
             import akka.stream.scaladsl.GraphDSL.Implicits._
-            sourceLines ~> throttledLines ~> sink
-//            sourceLines ~> sink
+            sourceLines ~> throttledLinesSink
             ClosedShape
         })
         .run()(materializer)
@@ -79,7 +78,7 @@ object StreamSenderActor {
 
     sender ! StreamBook("throttle-stream-graph/src/main/resources/log.txt")
 
-    Thread sleep 4000
+    Thread sleep 25000
     system terminate
   }
 }
