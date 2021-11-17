@@ -19,7 +19,7 @@ lazy val root = (project in file("."))
     name := "hello_scala",
     libraryDependencies += scalaTest % Test
   )
-  .aggregate(`introduction`, `reactivemongo-getstarted`, `throttle-stream-actor`, `throttle-stream-graph`)
+  .aggregate(`introduction`, `ninety-nine-scala-problems`, `reactivemongo-getstarted`, `throttle-stream-actor`, `throttle-stream-graph`)
 
 lazy val `introduction` = (project in file("introduction"))
   .settings(libraryDependencies ++= {
@@ -36,6 +36,11 @@ lazy val `throttle-stream-actor` = (project in file("throttle-stream-actor"))
 lazy val `throttle-stream-graph` = (project in file("throttle-stream-graph"))
   .settings(libraryDependencies ++= {
     Seq(akkaActor, akkaTestKit, scalaTest, akkaStream)
+  })
+
+lazy val `ninety-nine-scala-problems` = (project in file("ninety-nine-scala-problems"))
+  .settings(libraryDependencies ++= {
+    Seq(scalaTest % Test)
   })
 
 // See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.
