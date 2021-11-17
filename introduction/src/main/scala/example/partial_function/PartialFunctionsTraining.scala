@@ -13,8 +13,7 @@ object PartialFunctionsTraining {
   val four: PartialFunction[Int, String] = { case 4    => "four" }
   val wildcard: PartialFunction[Int, String] = { case x => s"something else: $x" }
 
-  val partial
-    : PartialFunction[Int, String] = one orElse two orElse three orElse four orElse wildcard
+  val partial: PartialFunction[Int, String] = one orElse two orElse three orElse four orElse wildcard
   val oneEvenOdd: PartialFunction[Int, String] = one orElse isEven orElse isOdd
 
   def square(x:Int) = x * x

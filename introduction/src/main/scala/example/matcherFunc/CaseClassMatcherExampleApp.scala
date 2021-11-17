@@ -22,10 +22,7 @@ object CaseClassMatcherExampleApp {
 }
 
 trait Account
-
 case class User(name: String, email: String) extends Account
-
 case class SuperUser(name: String, email: String, privileges: String)
     extends Account
-
 case object SomethingStrange extends Account

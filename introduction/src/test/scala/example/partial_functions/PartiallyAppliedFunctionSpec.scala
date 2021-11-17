@@ -1,4 +1,4 @@
-package example
+package example.partial_functions
 
 import org.scalatest._
 

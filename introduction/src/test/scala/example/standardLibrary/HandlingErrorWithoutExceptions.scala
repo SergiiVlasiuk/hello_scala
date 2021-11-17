@@ -59,7 +59,12 @@ class HandlingErrorWithoutExceptions extends FlatSpec with Matchers {
   "the result should be a Some with a list of all the values" should "be ..." in {
     def sequence(a: List[Option[Int]]): Option[List[Int]] = a match {
       case Nil    => Some(Nil)
-      case h :: t => h flatMap (hh => sequence(t) map (hh :: _))
+      case h :: t =>
+        println(s"h: $h, t: $t")
+        h flatMap {hh =>
+          println(s"hh: $hh, h: $h, t: $t")
+          sequence(t) map (hh :: _)
+        }
     }
 
     sequence(List(Some(1), Some(2), Some(3))) shouldBe Some(List(1, 2, 3))
@@ -67,7 +72,11 @@ class HandlingErrorWithoutExceptions extends FlatSpec with Matchers {
   }
   "try traverse out, by trying to parse a List[String] into a Option[List[Int]]" should "be ..." in {
     def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
-      a flatMap (aa => b map (bb => f(aa, bb)))
+      a flatMap (aa => b map {
+        bb =>
+          println(s"m2 inside. a: $a, aa: $aa, b: $b, bb: $bb")
+          f(aa, bb)
+      })
 
     def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] =
       a match {
@@ -76,7 +85,11 @@ class HandlingErrorWithoutExceptions extends FlatSpec with Matchers {
           Some(Nil)
         case h :: t =>
           println(s"traverse[A, B]: $h, $t")
-          map2(f(h), traverse(t)(f))(_ :: _)
+          map2(f(h), traverse(t)(f)){
+            (p1, p2) =>
+              println(s"map operating with next data: p1 $p1, p2 $p2")
+              p1 :: p2
+          }
       }
 
     val list1 = List("1", "2", "3")
@@ -84,8 +97,7 @@ class HandlingErrorWithoutExceptions extends FlatSpec with Matchers {
 
     def parseInt(a: String): Option[Int] = Try(a.toInt) match {
       case Success(r) =>
-        Some(r)
-        println(s"parseInt($a: String)")
+        println(s"parseInt($r: String)")
         Some(r)
       case _ =>
         println(s"parseInt($a: String) None")
@@ -104,14 +116,13 @@ class HandlingErrorWithoutExceptions extends FlatSpec with Matchers {
         case _       => Left("Employee not found")
       }
 
+    // Either[String, Employee] where Left contains String type, Right is Employee
     def getDepartment: (Either[String, Employee]) => Either[String, String] =
       _.map(_.department)
 
     getDepartment(lookupByNameViaEither("Joe")) shouldBe Right("Finances")
     getDepartment(lookupByNameViaEither("Mary")) shouldBe Right("IT")
-    getDepartment(lookupByNameViaEither("Foo")) shouldBe Left(
-      "Employee not found"
-    )
+    getDepartment(lookupByNameViaEither("Foo")) shouldBe Left("Employee not found")
   }
   "to find two different errors in its execution" should "be ..." in {
     def lookupByNameViaEither(name: String): Either[String, Employee] =
@@ -153,14 +164,14 @@ class HandlingErrorWithoutExceptions extends FlatSpec with Matchers {
         }
       )
 
-    getManager(lookupByNameViaEither("Joe"))
-      .getOrElse(Right("Mr. CEO")) shouldBe "Julie"
-    //    getManager(lookupByNameViaEither("Joe")).getOrElse(Right("Mr. CEO")) shouldBe Right("Julie")
-    getManager(lookupByNameViaEither("Mary"))
-      .getOrElse(Right("Mr. CEO")) shouldBe Right("Mr. CEO")
-    getManager(lookupByNameViaEither("Foo"))
-      .getOrElse(Right("Mr. CEO")) shouldBe Right("Mr. CEO")
+    getManager(lookupByNameViaEither("Joe")).getOrElse(Right("Mr. CEO")) shouldBe "Julie"
+    getManager(lookupByNameViaEither("Joe")).orElse(Right("Mr. CEO")) shouldBe Right("Julie")
+    getManager(lookupByNameViaEither("Mary")).getOrElse(Right("Mr. CEO")) shouldBe Right("Mr. CEO")
+    getManager(lookupByNameViaEither("Mary")).orElse(Right("Mr. CEO")) shouldBe Right("Mr. CEO")
+    getManager(lookupByNameViaEither("Foo")).getOrElse(Right("Mr. CEO")) shouldBe Right("Mr. CEO")
+    getManager(lookupByNameViaEither("Foo")).orElse(Right("Mr. CEO")) shouldBe Right("Mr. CEO")
   }
+
   "As for sequence, create a List of the employees we looked up by using the lookupByNameViaEither" should "be ..." in {
     val employees =
       List(lookupByNameViaEither("Joe"), lookupByNameViaEither("Mary"))
@@ -184,26 +195,85 @@ class HandlingErrorWithoutExceptions extends FlatSpec with Matchers {
     val ints = seq.filter(_.isRight).map(_.getOrElse(0))
     println(ints)
   }
+
 //  "let's test map2" should "be ..." in {
-//    def map2[EE >: E, B, C](b: Either[EE, B])(f: (A, B) => C): Either[EE, C] =
-//      for {
-//        a <- this;
-//        b1 <- b
-//      } yield f(a, b1)
+//    println(s"${lookupByNameViaEither("Joe")}")
+//    println(s"${lookupByNameViaEither("Mary")}")
+//    println(s"${lookupByNameViaEither("Izumi")}")
+//    println(s"${lookupByNameViaEither("Foo")}")
 //
-//    def lookupByNameViaEither(name: String): Either[String, Employee] = name match {
-//      case "Joe" => Right(Employee("Joe", "Finances", Some("Julie")))
-//      case "Mary" => Right(Employee("Mary", "IT", None))
-//      case "Izumi" => Right(Employee("Izumi", "IT", Some("Mary")))
-//      case _ => Left("Employee not found")
-//    }
+//////    def traverse[E, A, B](es: List[A])(f: A => Either[E, B]): Either[E, List[B]] =
+//////      es match {
+//////        case Nil => Right(Nil)
+//////        case h :: t => (f(h) map2 traverse(t)(f)) (_ :: _)
+//////      }
+////    def map2[EE >: E, B, C](b: Either[EE, B])(f: (A, B) => C): Either[EE, C] =
+////      for {
+////        a <- this;
+////        b1 <- b
+////      } yield f(a, b1)
+//////
+//////    def lookupByNameViaEither(name: String): Either[String, Employee] = name match {
+//////      case "Joe" => Right(Employee("Joe", "Finances", Some("Julie")))
+//////      case "Mary" => Right(Employee("Mary", "IT", None))
+//////      case "Izumi" => Right(Employee("Izumi", "IT", Some("Mary")))
+//////      case _ => Left("Employee not found")
+//////    }
+//////
+//def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] =
+//  a match {
+//    case Nil =>
+//      println(s"traverse[A, B]: Nil")
+//      Some(Nil)
+//    case h :: t =>
+//      println(s"traverse[A, B]: $h, $t")
+//      map2(f(h), traverse(t)(f)){
+//        (p1, p2) =>
+//          println(s"map operating with next data: p1 $p1, p2 $p2")
+//          p1 :: p2
+//      }
+//  }
+////    traverse(list1)(i => parseInt(i)) shouldBe Some(List(1, 2, 3))
 //
 //    def employeesShareDepartment(employeeA: Employee, employeeB: Employee) =
 //      employeeA.department == employeeB.department
+//    def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
+//      a flatMap (aa => b map {
+//        bb =>
+//          println(s"m2 inside. a: $a, aa: $aa, b: $b, bb: $bb")
+//          f(aa, bb)
+//      })
 //
-//    lookupByNameViaEither("Joe").map2(lookupByNameViaEither("Mary"))(employeesShareDepartment) shouldBe ???
-//    lookupByNameViaEither("Mary").map2(lookupByNameViaEither("Izumi"))(employeesShareDepartment) shouldBe ???
-//    lookupByNameViaEither("Foo").map2(lookupByNameViaEither("Izumi"))(employeesShareDepartment) shouldBe ???
+////    map2(lookupByNameViaEither("Joe"), lookupByNameViaEither("Mary"))(employeesShareDepartment) shouldBe "???"
+////    lookupByNameViaEither("Joe").map2(lookupByNameViaEither("Mary"))(employeesShareDepartment) shouldBe "???"
+//////    lookupByNameViaEither("Mary").map2(lookupByNameViaEither("Izumi"))(employeesShareDepartment) shouldBe ???
+//////    lookupByNameViaEither("Foo").map2(lookupByNameViaEither("Izumi"))(employeesShareDepartment) shouldBe ???
+//
+//    // ============================
+//    val employees = List("Joe", "Mary")
+//    val employeesAndOutsources = employees :+ "Foo"
+//
+//    def traverse2[E, A, B](es: List[A])(f: A => Either[E, B]): Either[E, List[B]] = es match {
+//      case Nil => Right(Nil)
+//      case h :: t => (f(h) map2 traverse2(t)(f))(_ :: _)
+//    }
+//    traverse2(employees)(lookupByNameViaEither)
+//  }
+
+//  "Exercise 4.7" shouldBe {
+//    def traverse[E, A, B](es: List[A])(f: A => Either[E, B]): Either[E, List[B]] = es match {
+//      case Nil => Right(Nil)
+//      case h :: t => (f(h) map2 traverse(t)(f)){(p1, p2) =>
+//        println(s"p1: $p1, p2: $p2")
+//      }
+//    }
+//    def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
+//      a flatMap (aa => b map {
+//        bb =>
+//          println(s"m2 inside. a: $a, aa: $aa, b: $b, bb: $bb")
+//          f(aa, bb)
+//      })
+//
 //  }
 }
 

@@ -131,6 +131,7 @@ class TraversablesSpec extends FlatSpec with Matchers {
     map.hasDefiniteSize should be(true)
 
     val stream = cons(0, cons(1, Stream.empty))
+    println(stream.knownSize)
     stream.hasDefiniteSize should be(false)
   }
   "head will return the first element of an ordered collection, or some random element if order is not defined like in a Set or Map" should "be" in {
@@ -281,6 +282,7 @@ class TraversablesSpec extends FlatSpec with Matchers {
     }
     result should be(-15)
     val result2 = list.foldLeft(0) { (`running total`, `next element`) ⇒
+      println(s"foldLeft.  `next element`: ${`next element`}, `running total`: ${`running total`}")
       `running total` - `next element`
     }
     result2 should be(-15)
@@ -298,6 +300,7 @@ class TraversablesSpec extends FlatSpec with Matchers {
     result should be(3)
 
     val result2 = list.foldRight(0) { (`next element`, `running total`) ⇒
+      println(s"foldRight.  `next element`: ${`next element`}, `running total`: ${`running total`}")
       `next element` - `running total`
     }
     result2 should be(3)

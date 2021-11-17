@@ -123,12 +123,13 @@ class ExtractorsSpec extends FlatSpec with Matchers {
     }
     val singri = new Employee("Singri", None, "Keerthi")
     val result = singri match {
-      case Employee("Singri", None, x) ⇒
-        "Yay, Singri %s! with no middle name!".format(x)
-      case Employee("Singri", Some(x), _) ⇒
-        "Yay, Singri with a middle name of %s".format(x)
+      case Employee("Singri", None, x) ⇒ "Yay, Singri %s! with no middle name!".format(x)
+      case Employee(x, None, "Singri") ⇒ "Yay, Singri %s! with no middle name! and mixed unapply result".format(x)
+      case Employee("Singri", Some(x), _) ⇒ "Yay, Singri with a middle name of %s".format(x)
       case _ ⇒ "I don't care, going on break"
     }
-    result should be("I don't care, going on break")
+    result should be("Yay, Singri Keerthi! with no middle name! and mixed unapply result")
+
+    val m = (1->"one", 2 ->"two")
   }
 }

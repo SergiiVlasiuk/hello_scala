@@ -4,33 +4,33 @@ object FunctionCompositionTraining {
   //val fComposeG: String => String = f _ compose g _
   val fComposeG: String => String = f _ compose g
   //val fAndThenG = f _ andThen g _
-  val fAndThenG = f _ andThen g
+  val fAndThenG: String => String = f _ andThen g
 
-  val gAndThenH = g _ andThen h
-  val gComposeH = g _ compose h
+  val gAndThenH: String => String = g _ andThen h
+  val gComposeH: String => String = g _ compose h
 
   val fAndThenGAndThenH: String => String = f _ andThen g andThen h
   val fAndThen_gAndThenH: String => String = f _ andThen gAndThenH
   val fAndThenG_AndThenH: String => String = fAndThenG andThen h
 
-  val fAndThenGComposeH = f _ andThen g compose h
-  val fAndThenG_ComposeH = fAndThenG compose h
-  val fAndThen_gComposeH = f _ andThen gComposeH
+  val fAndThenGComposeH: String => String = f _ andThen g compose h
+  val fAndThenG_ComposeH: String => String = fAndThenG compose h
+  val fAndThen_gComposeH: String => String = f _ andThen gComposeH
 
-  val fComposeGAndThenH = f _ compose g andThen h
-  val fComposeG_AndThenH = fComposeG andThen h
-  val fCompose_gAndThenH = f _ compose gAndThenH
+  val fComposeGAndThenH: String => String = f _ compose g andThen h
+  val fComposeG_AndThenH: String => String = fComposeG andThen h
+  val fCompose_gAndThenH: String => String = f _ compose gAndThenH
 
-  val fComposeGComposeH = f _ compose g compose h
-  val fComposeG_ComposeH = fComposeG compose h
-  val fCompose_GComposeH = f _ compose gComposeH
+  val fComposeGComposeH: String => String = f _ compose g compose h
+  val fComposeG_ComposeH: String => String = fComposeG compose h
+  val fCompose_GComposeH: String => String = f _ compose gComposeH
   //val fAndThenG: String => String = f _ andThen g
 
   def main(args: Array[String]): Unit = {
-    println(fComposeG("  f _ compose g _  "))
-    println(fAndThenG("  f _ andThen g _  "))
-    println(gAndThenH("  g _ andThen h _  "))
-    println(gComposeH("  g _ compose h _  "))
+    println(fComposeG("  f _ compose g "))
+    println(fAndThenG("  f _ andThen g "))
+    println(gAndThenH("  g _ andThen h "))
+    println(gComposeH("  g _ compose h "))
     println
     println(fAndThenGAndThenH("  f _ andThen g andThen h  "))
     println(fAndThen_gAndThenH("  f _ andThen gAndThenH  "))
