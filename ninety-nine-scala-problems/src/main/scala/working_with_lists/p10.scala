@@ -11,6 +11,11 @@ package working_with_lists
 
 object p10 {
   import working_with_lists.p09.pack
+
+  // List('a, 'a, 'a, 'a, 'b, 'c, 'c, 'a, 'a, 'd, 'e, 'e, 'e, 'e)
   def encode[A](ls: List[A]): List[(Int, A)] =
-    pack(ls) map { e => (e.length, e.head) }
+//    pack(ls) map { e => (e.length, e.head) }
+  // List(List('a, 'a, 'a, 'a), List('b), List('c, 'c), List('a, 'a), List('d), List('e, 'e, 'e, 'e))
+    pack(ls) map ( e => (e.length, e.head) )
+  // List((4,'a), (1,'b), (2,'c), (2,'a), (1,'d), (4,'e))
 }

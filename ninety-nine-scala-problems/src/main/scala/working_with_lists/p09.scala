@@ -18,6 +18,7 @@ object p09 {
        *  $orderDependent
        */
       val (packed, next) = ls span { _ == ls.head }
+      println(s"packed: $packed, next: $next")
       if (next == Nil) List(packed)
       else packed :: pack(next)
     }
